@@ -71,6 +71,14 @@
     background-color: rgb(53, 124, 53) !important;
 }
 
+.redbackground {
+    background-color: rgb(190, 71, 71) !important;
+}
+
+.greenbackground {
+    background-color: rgb(53, 124, 53) !important;
+}
+
 .greenborder {
     border-style: solid;
     border-color: rgb(53, 124, 53) !important;

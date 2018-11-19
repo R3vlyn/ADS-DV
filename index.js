@@ -1,5 +1,6 @@
 var playstoreapps;
-
+var selectedgenre;
+var selectedgenrebuttonid;
 var includedattributes = [];
 
 var svg = d3.select("svg"),
@@ -66,6 +67,11 @@ function makeChart(data) {
         }
     });
 
+    result.sort()
+    result.forEach(element => {
+        addGenreButton(element);
+    })
+
     var unique = data.filter((v, i, a) => a.indexOf(v) === i);
     console.log(result);
     var categoriesAvgRating = d3.nest()
@@ -110,6 +116,30 @@ function makeChart(data) {
         .attr("height", function(d) {
             return height - y(Number(d.value));
         });
+}
+
+
+function selectGenre(genre, buttonid) {
+    console.log(`selection = ${genre} with buttonid ${buttonid}`);
+    $(selectedgenrebuttonid).removeClass('greenbackground');
+    $(buttonid).addClass('greenbackground');
+    selectedgenre = genre;
+    selectedgenrebuttonid = buttonid;
+}
+
+function addGenreButton(genre, rownum = 1, colnum = 1) {
+    if (colnum > 3) {
+        rownum++;
+        colnum = 1;
+    }
+    if ($(`#row-${rownum}`).length == 0) {
+        $("#genres").append(`<div class='row' id='row-${rownum}'></div>`)
+        addGenreButton(genre, rownum, colnum)
+    } else if ($(`#row-${rownum}-col-${colnum}`).length == 0) {
+        $(`#row-${rownum}`).append(`<button id="row-${rownum}-col-${colnum}" type="button" class="btn btn-primary col-sm-4" onclick="selectGenre(\'${genre}\', '#row-${rownum}-col-${colnum}')">${genre}</button>`)
+    } else {
+        addGenreButton(genre, rownum, colnum + 1);
+    }
 }
 
 function getMin(data, attr) {
