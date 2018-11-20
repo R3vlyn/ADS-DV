@@ -2,6 +2,37 @@ var playstoreapps;
 var selectedgenre;
 var selectedgenrebuttonid;
 var includedattributes = [];
+var currentstep = 1;
+var completes = document.querySelectorAll(".complete");
+
+// $(document).ready(function() {
+//     $('.carousel').carousel();
+// });
+
+function toggleComplete() {
+    var lastComplete = completes[completes.length - 1];
+    lastComplete.classList.toggle('complete');
+}
+
+function nextStep() {
+    $('.carousel').carousel('next')
+    currentstep = currentstep + 1;
+    $(`#step${currentstep}`).addClass('complete');
+}
+
+function previousStep() {
+    $('.carousel').carousel('prev')
+    $(`#step${currentstep}`).removeClass('complete');
+    currentstep = currentstep - 1;
+    $(`#step${currentstep}`).addClass('complete');
+}
+
+function restart() {
+    $(".complete").removeClass('complete');
+    currentstep = 1;
+    $(`#step${currentstep}`).addClass('complete');
+}
+
 
 var svg = d3.select("svg"),
     margin = {
@@ -31,6 +62,7 @@ d3.csv("playstoredata.csv", function(d) {
     myData = data;
     console.log(myData);
     makeChart(myData);
+    makeChartJS(myData);
 });
 
 onclick = "myFunction()"
@@ -52,6 +84,57 @@ function excludeAttr(attr) {
         }
     }
     $('#' + attr + "box").addClass('redborder').removeClass('greenborder');
+}
+
+function swap(json) {
+    var ret = {};
+    for (var key in json) {
+        console.log(json[key].value);
+        ret[json[key].value] = json[key].key;
+    }
+    return ret;
+}
+
+function makeChartJS(data) {
+
+
+    var categoriesAvgRating = d3.nest()
+        .key(function(d) { return d.Category; })
+        .rollup(function(v) { return d3.mean(v, function(d) { return d.Rating; }); })
+        .entries(data);
+
+    console.log(categoriesAvgRating);
+
+    var swapped = swap(categoriesAvgRating);
+    console.log(swapped);
+
+    const ordered = {};
+    Object.keys(swapped).sort(function(a, b) { return b - a; }).forEach(function(key) {
+        ordered[key] = swapped[key];
+    });
+    console.log(ordered);
+
+    values = Array.from(Object.keys(ordered));
+    labels = Array.from(Object.values(ordered));
+
+    new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Average rating",
+                backgroundColor: "#3e95cd",
+                data: values
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: 'Average rating per category'
+            }
+        }
+    });
 }
 
 function makeChart(data) {

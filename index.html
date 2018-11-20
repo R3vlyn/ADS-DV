@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DV-Design</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,600,700' rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -17,70 +20,124 @@
 </head>
 
 <body>
+
     <div class="container">
-        <div class="jumbotron">
+        <ul class="timeline" id="timeline">
+            <li id="step1" class="li complete">
+                <div class="timestamp">
+                    <span class="author">Pick analytics-type</span>
+                </div>
+                <div class="status">
+                    <h4>Done</h4>
+                </div>
+            </li>
+            <li id="step2" class="li ">
+                <div class="timestamp">
+                    <span class="author">What do you want to define?</span>
+                </div>
+                <div class="status">
+                    <h4>To-do</h4>
+                </div>
+            </li>
+            <li id="step3" class="li ">
+                <div class="timestamp">
+                    <span class="author">What do you want to include?</span>
+                </div>
+                <div class="status">
+                    <h4>To-do</h4>
+                </div>
+            </li>
+            <li id="step4" class="li">
+                <div class="timestamp">
+                    <span class="author">Outcome</span>
+                </div>
+                <div class="status">
+                    <h4>To-do</h4>
+                </div>
+            </li>
+        </ul>
+        <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+                <button type="button" onclick="previousStep()" class="btn btn-primary"><i class="fa fa-arrow-left"></i></button>
+            </div>
+            <div class="btn-group">
+                <button type="button" onclick="nextStep()" class="btn btn-primary"><i class="fa fa-arrow-right"></i></button>
+            </div>
+            <div class="btn-group">
+                <button type="button" onclick="restart()" class="btn btn-primary"><i class="fa fa-undo"></i></button>
+            </div>
+        </div>
+
+        <div id="this-carousel-id" class="carousel slide">
+            <!-- class of slide for animation -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <div class="well greenborder d-block w-100 carousel-caption" id="installsbox">
+                        <form>
+                            <div class="form-group">
+                                <label for="formControlRange" class="blacktext">Number of installations</label>
+                                <input type="range" class="form-control-range" id="installsslider">
+                                <div class="btn-group btn-group-justified">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('installs')">Exclude</button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('installs')">Include</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="new_html_code"></div>
+
+                </div>
+                <div class="item">
+                    <div class="well greenborder d-block w-100 carousel-caption" id="ratingbox">
+                        <form>
+                            <div class="form-group">
+                                <label for="formControlRange" class="blacktext">Rating you wish to achieve</label>
+                                <input type="range" class="form-control-range" id="installsslider">
+                                <div class="btn-group btn-group-justified">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('rating')">Exclude</button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('rating')">Include</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="new_html_code"></div>
+
+                </div>
+                <div class="item">
+                    <div class="well greenborder d-block w-100 carousel-caption" id="reviewsbox">
+                        <form>
+                            <div class="form-group">
+                                <label for="formControlRange" class="blacktext">Number of Reviews you would like to receive</label>
+                                <input type="range" class="form-control-range" id="installsslider">
+                                <div class="btn-group btn-group-justified">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('reviews')">Exclude</button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('reviews')">Include</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="new_html_code"></div>
+                </div>
+            </div>
+        </div>
+        <!-- /.carousel -->
+        <!-- <div class="jumbotron">
             <h1>The road to app success</h1>
             <h2>What are your goals?</h2>
-        </div>
-        <!-- <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary">Installs</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary">Rating</button>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary">Reviews</button>
-            </div>
         </div> -->
-        <div class="well greenborder" id="installsbox">
-            <form>
-                <div class="form-group">
-                    <label for="formControlRange">Number of installations</label>
-                    <input type="range" class="form-control-range" id="installsslider">
-                    <div class="btn-group btn-group-justified">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('installs')">Exclude</button>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('installs')">Include</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="well greenborder" id="ratingbox">
-            <form>
-                <div class="form-group">
-                    <label for="formControlRange">Rating you wish to achieve</label>
-                    <input type="range" class="form-control-range" id="installsslider">
-                    <div class="btn-group btn-group-justified">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('rating')">Exclude</button>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('rating')">Include</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="well greenborder" id="reviewsbox">
-            <form>
-                <div class="form-group">
-                    <label for="formControlRange">Number of Reviews you would like to receive</label>
-                    <input type="range" class="form-control-range" id="installsslider">
-                    <div class="btn-group btn-group-justified">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('reviews')">Exclude</button>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('reviews')">Include</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+
         <div id="genres">
             <!-- <div class="row" id="row-1">
                 <button id="row-1-col-1" type="button" class="btn btn-primary redbutton col-sm-4 " onclick="excludeAttr('reviews')">Exclude</button>
@@ -89,7 +146,7 @@
             </div> -->
         </div>
 
-
+        <canvas id="bar-chart" width="800" height="450"></canvas>
         <svg width="1200" height="500"></svg>
         <div id="pieChart"></div>
         <div id="barChart"></div>
