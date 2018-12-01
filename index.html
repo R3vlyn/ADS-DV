@@ -9,18 +9,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,600,700' rel='stylesheet' type='text/css'>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </head>
 
 <body>
-
     <div class="container">
         <ul class="timeline" id="timeline">
             <li id="step1" class="li complete">
@@ -56,79 +53,116 @@
                 </div>
             </li>
         </ul>
-        <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-                <button type="button" onclick="previousStep()" class="btn btn-primary"><i class="fa fa-arrow-left"></i></button>
-            </div>
-            <div class="btn-group">
-                <button type="button" onclick="nextStep()" class="btn btn-primary"><i class="fa fa-arrow-right"></i></button>
-            </div>
-            <div class="btn-group">
-                <button type="button" onclick="restart()" class="btn btn-primary"><i class="fa fa-undo"></i></button>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <button type="button" onclick="previousStep()" class="btn btn-outline-primary btn-block"><i class="fa fa-arrow-left"></i></button>
+                </div>
+                <div class="col-sm">
+                    <button type="button" onclick="nextStep()" class="btn btn-outline-primary btn-block"><i class="fa fa-arrow-right"></i></button>
+                </div>
+                <div class="col-sm">
+                    <button type="button" onclick="restart()" class="btn btn-outline-primary btn-block"><i class="fa fa-undo"></i></button>
+                </div>
             </div>
         </div>
 
-        <div id="this-carousel-id" class="carousel slide">
-            <!-- class of slide for animation -->
-            <div class="carousel-inner">
-                <div class="item active">
-                    <div class="well greenborder d-block w-100 carousel-caption" id="installsbox">
-                        <form>
-                            <div class="form-group">
-                                <label for="formControlRange" class="blacktext">Number of installations</label>
-                                <input type="range" class="form-control-range" id="installsslider">
-                                <div class="btn-group btn-group-justified">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('installs')">Exclude</button>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('installs')">Include</button>
-                                    </div>
+        <div id="main-carousel" class="carousel slide container">
+            <div class="row">
+                <!-- class of slide for animation -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <button type="button" onclick="SelectNewApp()" class="btn btn-primary main-choice-button btn-block"><h3>I want a new app</h3> </button>
+                                </div>
+                                <div class="col-sm">
+                                    <button type="button" onclick="SelectChangeApp()" class="btn btn-primary main-choice-button btn-block"><h3>What should i change in my app?</h3></button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="new_html_code"></div>
 
-                </div>
-                <div class="item">
-                    <div class="well greenborder d-block w-100 carousel-caption" id="ratingbox">
-                        <form>
-                            <div class="form-group">
-                                <label for="formControlRange" class="blacktext">Rating you wish to achieve</label>
-                                <input type="range" class="form-control-range" id="installsslider">
-                                <div class="btn-group btn-group-justified">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('rating')">Exclude</button>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('rating')">Include</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                            <div class="new_html_code"></div>
+                        </div>
                     </div>
-                    <div class="new_html_code"></div>
+                    <div class="carousel-item">
+                        <div class="newappitem container">
 
-                </div>
-                <div class="item">
-                    <div class="well greenborder d-block w-100 carousel-caption" id="reviewsbox">
-                        <form>
-                            <div class="form-group">
-                                <label for="formControlRange" class="blacktext">Number of Reviews you would like to receive</label>
-                                <input type="range" class="form-control-range" id="installsslider">
-                                <div class="btn-group btn-group-justified">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('reviews')">Exclude</button>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('reviews')">Include</button>
+                            <form>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <div class="row">
+                                                <div class="col-sm">
+                                                    <label for="formControlRange" class="blacktext">Minimum amount of installations:</label>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <label class="blacktext" id="mininstallslabel">-</label>
+                                                </div>
+                                            </div>
+
+                                            <input type="range" min="0" max="5" class="form-control-range" id="mininstallsrange">
+                                        </div>
+                                        <div class="col-sm">
+                                            <div class="row">
+                                                <div class="col-sm">
+                                                    <label for="formControlRange" class="blacktext">Maximum amount of installations:</label>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <label class="blacktext" id="maxinstallslabel">-</label>
+                                                </div>
+                                            </div>
+                                            <input type="range" min="0" max="5" class="form-control-range" id="maxinstallsrange">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                                <div class="row">
+                                    <label for="formControlRange" class="blacktext">Rating you wish to achieve</label>
+                                    <input type="range" class="form-control-range" id="installsslider">
+                                    <div class="btn-group btn-group-justified">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('rating')">Exclude</button>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('rating')">Include</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="formControlRange" class="blacktext">Number of Reviews you would like to receive</label>
+                                    <input type="range" class="form-control-range" id="installsslider">
+                                    <div class="btn-group btn-group-justified">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('reviews')">Exclude</button>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('reviews')">Include</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="changeappitem">
+                            what do you want to define?
+                        </div>
+                        <div class="new_html_code"></div>
+
                     </div>
-                    <div class="new_html_code"></div>
+                    <div class="carousel-item">
+                        <div class="well greenborder d-block w-100 carousel-caption" id="ratingbox">
+                            <form>
+
+                            </form>
+                        </div>
+                        <div class="new_html_code"></div>
+
+                    </div>
+                    <div class="carousel-item">
+                        <div class="well greenborder d-block w-100 carousel-caption" id="reviewsbox">
+
+                        </div>
+                        <div class="new_html_code"></div>
+                    </div>
                 </div>
             </div>
         </div>

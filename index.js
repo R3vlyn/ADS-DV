@@ -4,10 +4,39 @@ var selectedgenrebuttonid;
 var includedattributes = [];
 var currentstep = 1;
 var completes = document.querySelectorAll(".complete");
+var route = "";
+var maxinstalls = 1000000;
+var mininstalls = 0
+var maxinstallsvalue =
 
-// $(document).ready(function() {
-//     $('.carousel').carousel();
-// });
+    $(document).ready(function() {
+        $('.carousel').carousel('pause');
+
+    });
+
+function SelectNewApp() {
+    this.route = "newapp";
+    showClassElements("newappitem");
+    hideClassElements("changeappitem");
+
+    nextStep();
+}
+
+function SelectChangeApp() {
+    this.route = "changeapp";
+    showClassElements("changeappitem");
+    hideClassElements("newappitem");
+    nextStep();
+}
+
+function showClassElements(classname) {
+    $(`.${classname}`).show();
+}
+
+function hideClassElements(classname) {
+    $(`.${classname}`).hide();
+}
+
 
 function toggleComplete() {
     var lastComplete = completes[completes.length - 1];
@@ -61,11 +90,40 @@ d3.csv("playstoredata.csv", function(d) {
 }).then(function(data) {
     myData = data;
     console.log(myData);
+    setInstallsValues(data);
+
     makeChart(myData);
     makeChartJS(myData);
 });
 
-onclick = "myFunction()"
+
+function setInstallsValues(data) {
+    this.maxinstalls = getMax(data, "installs_new");
+    this.mininstalls = getMin(data, "installs_new");
+    alert(mininstalls + "-" + maxinstalls);
+    $(document).ready(function() {
+        $('#maxinstallsrange').attr({
+            "max": this.maxinstalls,
+            "min": this.mininstalls,
+            "step": (this.maxinstalls - this.mininstalls) / 20
+        });
+        $('#mininstallsrange').attr({
+            "max": this.maxinstalls,
+            "min": this.mininstalls,
+            "step": (this.maxinstalls - this.mininstalls) / 20
+        });
+        $('#maxinstallsrange').change(function() {
+            var myVar = $(this).val();
+            $('#maxinstallslabel').text(myVar);
+        });
+        $('#mininstallsrange').change(function() {
+            var myVar = $(this).val();
+            $('#mininstallslabel').text(myVar);
+        });
+    });
+
+}
+
 
 function includeAttr(attr) {
     console.log("including attribute: " + attr);
@@ -227,28 +285,26 @@ function addGenreButton(genre, rownum = 1, colnum = 1) {
 
 function getMin(data, attr) {
     return d3.min(data, function(d) { return d[attr]; });
-
 }
 
 function getMax(data, attr) {
-    return d3.min(data, function(d) { return d[attr]; });
+    return d3.max(data, function(d) { return d[attr]; });
 }
 
 function getExtent(data, attr) {
     return d3.extent(data, function(d) { return d[attr]; });
 }
 
-
 function getMean(data, attr) {
-    return d3.extent(data, function(d) { return d[attr]; });
+    return d3.mean(data, function(d) { return d[attr]; });
 }
 
 function getMedian(data, attr) {
-    return d3.extent(data, function(d) { return d[attr]; });
+    return d3.median(data, function(d) { return d[attr]; });
 }
 
 function getDeviation(data, attr) {
-    return d3.extent(data, function(d) { return d[attr]; });
+    return d3.deviation(data, function(d) { return d[attr]; });
 }
 
 d3.select('h1').style('color', 'grey');
