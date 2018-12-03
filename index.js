@@ -5,14 +5,74 @@ var includedattributes = [];
 var currentstep = 1;
 var completes = document.querySelectorAll(".complete");
 var route = "";
+var selectedcontentrating = '';
 var maxinstalls = 1000000;
-var mininstalls = 0
-var maxinstallsvalue =
+var mininstalls = 0;
+var contentratings = ['Everyone', 'Teen', 'Everyone 10+', 'Mature 17+',
+    'Adults only 18+', 'Unrated'
+];
 
-    $(document).ready(function() {
-        $('.carousel').carousel('pause');
+var installationsteps = {
+    1: 5,
+    2: 50,
+    3: 500,
+    4: 5000,
+    5: 50000,
+    6: 500000,
+    7: 5000000,
+    8: 50000000,
+    9: 500000000
+};
 
-    });
+class Goals {
+    constructor(maxinstalls, mininstalls, minrating, minreviews) {
+        this.maxinstalls = maxinstalls;
+        this.mininstalls = mininstalls;
+        this.minrating = minrating;
+        this.minreviews = minreviews;
+    }
+
+    validateGoals() {
+        alert(this.maxinstalls + "-" + this.mininstalls + "-" + this.minrating + "-" + this.minreviews)
+        if (this.mininstalls != "-" && this.maxinstalls != "-" && this.minrating != "-" && this.minreviews != "-") {
+            if (this.mininstalls > 500000000) {
+                return "installations can not be above 500000000";
+            }
+            if (this.maxinstalls > 500000000) {
+                return "installations can not be above 500000000";
+            }
+            if (this.minreviews > 500000000) {
+                return "reviews can not be above 500000000";
+            }
+            if (this.mininstalls < 0) {
+                return "installations can not be below 0";
+            }
+            if (this.maxinstalls < 0) {
+                return "installations can not be below 0";
+            }
+            if (this.minreviews < 0) {
+                return "reviews can not be below 0";
+            }
+            if (this.minrating > 5) {
+                return "rating can not be above 5";
+            }
+            if (this.minrating < 0) {
+                return "rating can not be below 0";
+            }
+            return "ok";
+        } else {
+            return "Not all goals are defined"
+        }
+    }
+}
+
+var goals;
+
+
+$(document).ready(function() {
+    $('.carousel').carousel('pause');
+
+});
 
 function SelectNewApp() {
     this.route = "newapp";
@@ -45,8 +105,10 @@ function toggleComplete() {
 
 function nextStep() {
     $('.carousel').carousel('next')
+    $(`#step${currentstep}text`).text('Done!');
     currentstep = currentstep + 1;
     $(`#step${currentstep}`).addClass('complete');
+
 }
 
 function previousStep() {
@@ -54,6 +116,7 @@ function previousStep() {
     $(`#step${currentstep}`).removeClass('complete');
     currentstep = currentstep - 1;
     $(`#step${currentstep}`).addClass('complete');
+    $(`#step${currentstep}text`).text('To-Do');
 }
 
 function restart() {
@@ -96,29 +159,50 @@ d3.csv("playstoredata.csv", function(d) {
     makeChartJS(myData);
 });
 
+function submitGoals() {
+    var rating = $('#minratinglabel').text();
+    var maxinstalls = $('#maxinstallslabel').text();
+    var minreviews = $('#minreviewslabel').text();
+    var mininstalls = $('#mininstallslabel').text();
+    this.goals = new Goals(maxinstalls, mininstalls, rating, minreviews);
+    var validationresult = this.goals.validateGoals()
+    if (validationresult == "ok") {
+        nextStep();
+    } else {
+        alert(validationresult);
+    }
+
+}
 
 function setInstallsValues(data) {
     this.maxinstalls = getMax(data, "installs_new");
-    this.mininstalls = getMin(data, "installs_new");
-    alert(mininstalls + "-" + maxinstalls);
+    this.mininstalls = getMin(data, "installs_new");;
+    document.getElementById("maxinstallsrange").max = 9;
+    document.getElementById("maxinstallsrange").min = 1;
+    document.getElementById("maxinstallsrange").step = 1;
+    document.getElementById("mininstallsrange").max = 9;
+    document.getElementById("mininstallsrange").min = 1;
+    document.getElementById("mininstallsrange").step = 1;
+    document.getElementById("mininstallsrange").max = 9;
+    document.getElementById("mininstallsrange").min = 1;
+    document.getElementById("mininstallsrange").step = 1;
+
     $(document).ready(function() {
-        $('#maxinstallsrange').attr({
-            "max": this.maxinstalls,
-            "min": this.mininstalls,
-            "step": (this.maxinstalls - this.mininstalls) / 20
-        });
-        $('#mininstallsrange').attr({
-            "max": this.maxinstalls,
-            "min": this.mininstalls,
-            "step": (this.maxinstalls - this.mininstalls) / 20
+        $('#ratingrange').change(function() {
+            var myVar = $(this).val();
+            $('#minratinglabel').text(myVar);
         });
         $('#maxinstallsrange').change(function() {
             var myVar = $(this).val();
-            $('#maxinstallslabel').text(myVar);
+            $('#maxinstallslabel').text(installationsteps[myVar]);
+        });
+        $('#reviewrange').change(function() {
+            var myVar = $(this).val();
+            $('#minreviewslabel').text(installationsteps[myVar]);
         });
         $('#mininstallsrange').change(function() {
             var myVar = $(this).val();
-            $('#mininstallslabel').text(myVar);
+            $('#mininstallslabel').text(installationsteps[myVar]);
         });
     });
 
@@ -259,6 +343,35 @@ function makeChart(data) {
         });
 }
 
+function selectContentRating(index) {
+    if (contentratings[index] == this.selectedcontentrating) {
+        this.selectedcontentrating = '';
+        $(`#crb_${index}`).removeClass('greenbackground');
+    } else {
+        $(`#crb_${index}`).addClass('greenbackground');
+        var numberarray = [0, 1, 2, 3, 4, 5]
+        this.selectedcontentrating = contentratings[index];
+        numberarray.forEach(function(element) {
+            if (element != index) {
+                console.log(element + "-" + index);
+                $(`#crb_${index}`).removeClass('greenbackground');
+            }
+        });
+    }
+
+}
+
+function selectFreeApp() {
+    $('#paidappbutton').removeClass('greenbackground');
+    $('#freeappbutton').addClass('greenbackground');
+    this.selectedcost = 'free';
+}
+
+function selectPaidApp() {
+    $('#paidappbutton').addClass('greenbackground');
+    $('#freeappbutton').removeClass('greenbackground');
+    this.selectedcost = 'paid';
+}
 
 function selectGenre(genre, buttonid) {
     console.log(`selection = ${genre} with buttonid ${buttonid}`);

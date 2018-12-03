@@ -25,23 +25,23 @@
                     <span class="author">Pick analytics-type</span>
                 </div>
                 <div class="status">
-                    <h4>Done</h4>
+                    <h4 id="step1text">To-do</h4>
                 </div>
             </li>
             <li id="step2" class="li ">
                 <div class="timestamp">
-                    <span class="author">What do you want to define?</span>
+                    <span class="author">What are your goals?</span>
                 </div>
                 <div class="status">
-                    <h4>To-do</h4>
+                    <h4 id="step2text">To-do</h4>
                 </div>
             </li>
             <li id="step3" class="li ">
                 <div class="timestamp">
-                    <span class="author">What do you want to include?</span>
+                    <span class="author">What do you know so far?</span>
                 </div>
                 <div class="status">
-                    <h4>To-do</h4>
+                    <h4 id="step3text">To-do</h4>
                 </div>
             </li>
             <li id="step4" class="li">
@@ -49,7 +49,7 @@
                     <span class="author">Outcome</span>
                 </div>
                 <div class="status">
-                    <h4>To-do</h4>
+                    <h4 id="step4text">To-do</h4>
                 </div>
             </li>
         </ul>
@@ -101,7 +101,7 @@
                                                 </div>
                                             </div>
 
-                                            <input type="range" min="0" max="5" class="form-control-range" id="mininstallsrange">
+                                            <input type="range" min="1" max="9" step="1" class="form-control-range" id="mininstallsrange">
                                         </div>
                                         <div class="col-sm">
                                             <div class="row">
@@ -112,35 +112,32 @@
                                                     <label class="blacktext" id="maxinstallslabel">-</label>
                                                 </div>
                                             </div>
-                                            <input type="range" min="0" max="5" class="form-control-range" id="maxinstallsrange">
+                                            <input type="range" class="form-control-range" min="1" max="9" step="1" id="maxinstallsrange">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <label for="formControlRange" class="blacktext">Rating you wish to achieve</label>
-                                    <input type="range" class="form-control-range" id="installsslider">
-                                    <div class="btn-group btn-group-justified">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('rating')">Exclude</button>
-                                        </div>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('rating')">Include</button>
-                                        </div>
+
+                                    <div class="col-lg">
+                                        <label for="formControlRange" class="blacktext">Minimum rating you wish to achieve: <label id="minratinglabel">-</label></label>
                                     </div>
+
+
+                                    <input type="range" class="form-control-range" min="3" max="5" step="0.1" id="ratingrange">
                                 </div>
                                 <div class="row">
-                                    <label for="formControlRange" class="blacktext">Number of Reviews you would like to receive</label>
-                                    <input type="range" class="form-control-range" id="installsslider">
-                                    <div class="btn-group btn-group-justified">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary redbutton" onclick="excludeAttr('reviews')">Exclude</button>
-                                        </div>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary greenbutton" onclick="includeAttr('reviews')">Include</button>
-                                        </div>
+
+                                    <div class="col-lg">
+                                        <label for="formControlRange" class="blacktext">Minimum number of reviews you would like to receive: <label id="minreviewslabel">-</label></label>
                                     </div>
+
+
+                                    <input type="range" class="form-control-range" min="1" max="9" step="1" id="reviewrange">
                                 </div>
                             </form>
+                            <div class="basicbuttonmargin">
+                                <button type="button" onclick="submitGoals()" class="btn btn-outline-primary btn-block">Submit</button>
+                            </div>
                         </div>
                         <div class="changeappitem">
                             what do you want to define?
@@ -149,11 +146,24 @@
 
                     </div>
                     <div class="carousel-item">
-                        <div class="well greenborder d-block w-100 carousel-caption" id="ratingbox">
-                            <form>
-
-                            </form>
+                        <h2>Genre</h2>
+                        <p>Select one</p>
+                        <div id="genres">
                         </div>
+                        <h2>Cost</h2>
+                        <row>
+                            <button id="freeappbutton" type="button" class="btn btn-primary col-sm-5" onclick="selectFreeApp()">Free</button>
+                            <button id="paidappbutton" type="button" class="btn btn-primary col-sm-5" onclick="selectPaidApp()">Paid</button>
+                        </row>
+                        <h2>Content Rating</h2>
+                        <button id="crb_0" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(0)">Everyone</button>
+                        <button id="crb_1" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(1)">Teen</button>
+                        <button id="crb_2" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(2)">Everyone 10+</button>
+                        <button id="crb_3" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(3)">Mature 17+</button>
+                        <button id="crb_4" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(4)">Adults only 18+</button>
+                        <button id="crb_5" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(5)">Unrated</button>
+                        <h2>Size</h2>
+                        <h2>Target Android Version</h2>
                         <div class="new_html_code"></div>
 
                     </div>
