@@ -13,6 +13,7 @@
 
     <!-- Latest compiled and minified CSS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </head>
@@ -147,28 +148,38 @@
                     </div>
                     <div class="carousel-item">
                         <h2>Genre</h2>
-                        <p>Select one</p>
+                        <p>Select one or select none</p>
                         <div id="genres">
                         </div>
                         <h2>Cost</h2>
+                        <p>Select one or select none</p>
                         <row>
                             <button id="freeappbutton" type="button" class="btn btn-primary col-sm-5" onclick="selectFreeApp()">Free</button>
                             <button id="paidappbutton" type="button" class="btn btn-primary col-sm-5" onclick="selectPaidApp()">Paid</button>
                         </row>
                         <h2>Content Rating</h2>
+                        <p>Select one or select none</p>
                         <button id="crb_0" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(0)">Everyone</button>
                         <button id="crb_1" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(1)">Teen</button>
                         <button id="crb_2" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(2)">Everyone 10+</button>
                         <button id="crb_3" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(3)">Mature 17+</button>
                         <button id="crb_4" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(4)">Adults only 18+</button>
                         <button id="crb_5" type="button" class="btn btn-primary col-sm-5" onclick="selectContentRating(5)">Unrated</button>
-                        <h2>Size</h2>
                         <h2>Target Android Version</h2>
+                        <p>Select one or select none</p>
+
+                        <select id="selectAndroidVersion" class="custom-select">
+                            
+                        </select>
+
+                        <div class="basicbuttonmargin">
+                            <button type="button" onclick="submitKnowns()" class="btn btn-outline-primary btn-block">Submit</button>
+                        </div>
                         <div class="new_html_code"></div>
 
                     </div>
                     <div class="carousel-item">
-                        <div class="well greenborder d-block w-100 carousel-caption" id="reviewsbox">
+                        <div id="charts">
 
                         </div>
                         <div class="new_html_code"></div>

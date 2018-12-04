@@ -1,17 +1,32 @@
 var playstoreapps;
-var selectedgenre;
+var selectedgenre = '';
 var selectedgenrebuttonid;
 var includedattributes = [];
 var currentstep = 1;
 var completes = document.querySelectorAll(".complete");
 var route = "";
 var selectedcontentrating = '';
+var cost = '';
 var maxinstalls = 1000000;
 var mininstalls = 0;
 var contentratings = ['Everyone', 'Teen', 'Everyone 10+', 'Mature 17+',
     'Adults only 18+', 'Unrated'
 ];
 
+var android_versions = ['4.0.3', '4.2', '4.4', '2.3', '3.0', '4.1', '4.0', '2.3.3', '2.2',
+    '5.0', '6.0', '1.6', '1.5', '2.1', '7.0', '5.1', '4.3', '2.0',
+    '3.2', '7.1', '8.0', '3.1', '2.0.1', '1.0', 'none'
+]
+
+var select = document.getElementById("selectAndroidVersion");
+this.android_versions = this.android_versions.sort();
+for (var i = 0; i < android_versions.length; i++) {
+    var opt = android_versions[i];
+    var el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    select.appendChild(el);
+}
 var installationsteps = {
     1: 5,
     2: 50,
@@ -65,14 +80,58 @@ class Goals {
         }
     }
 }
+class Knowns {
+    constructor(genre, version, cost, contentrating) {
+        this.wannaknow = [];
+        this.known = [];
+        if (genre === '') {
+            this.wannaknow.push("genre");
+        } else {
+            this.genre = genre;
+            this.known.push("genre");
+        }
+        if (version === 'none') {
+            this.wannaknow.push("version");
+        } else {
+            this.version = version;
+            this.known.push("version");
+        }
+        if (cost === '') {
+            this.wannaknow.push("cost");
+        } else {
+            this.cost = cost;
+            this.known.push("cost");
+        }
+        if (contentrating === '') {
+            this.wannaknow.push("contentrating");
+        } else {
+            this.contentrating = contentrating;
+            this.known.push("contentrating");
+        }
+    }
+
+
+}
+
 
 var goals;
-
+var knowns;
 
 $(document).ready(function() {
     $('.carousel').carousel('pause');
 
 });
+
+function submitKnowns() {
+    var selectedversion = $("#selectAndroidVersion option:selected").text();
+    this.knowns = new Knowns(this.selectedgenre, selectedversion, this.cost, this.selectedcontentrating)
+    nextStep();
+    calculateCharts(this.knowns);
+}
+
+function calculateCharts(knowns, goals); {
+
+}
 
 function SelectNewApp() {
     this.route = "newapp";
@@ -239,22 +298,18 @@ function swap(json) {
 
 function makeChartJS(data) {
 
-
     var categoriesAvgRating = d3.nest()
         .key(function(d) { return d.Category; })
         .rollup(function(v) { return d3.mean(v, function(d) { return d.Rating; }); })
         .entries(data);
 
-    console.log(categoriesAvgRating);
-
     var swapped = swap(categoriesAvgRating);
-    console.log(swapped);
 
     const ordered = {};
+
     Object.keys(swapped).sort(function(a, b) { return b - a; }).forEach(function(key) {
         ordered[key] = swapped[key];
     });
-    console.log(ordered);
 
     values = Array.from(Object.keys(ordered));
     labels = Array.from(Object.values(ordered));
@@ -344,41 +399,58 @@ function makeChart(data) {
 }
 
 function selectContentRating(index) {
-    if (contentratings[index] == this.selectedcontentrating) {
+    if (contentratings[index] === this.selectedcontentrating) {
         this.selectedcontentrating = '';
         $(`#crb_${index}`).removeClass('greenbackground');
     } else {
         $(`#crb_${index}`).addClass('greenbackground');
-        var numberarray = [0, 1, 2, 3, 4, 5]
+        x = contentratings.indexOf(this.selectedcontentrating);
+        $(`#crb_${x}`).removeClass('greenbackground');
+        // var numberarray = [0, 1, 2, 3, 4, 5]
         this.selectedcontentrating = contentratings[index];
-        numberarray.forEach(function(element) {
-            if (element != index) {
-                console.log(element + "-" + index);
-                $(`#crb_${index}`).removeClass('greenbackground');
-            }
-        });
+        // numberarray.forEach(function(element) {
+        //     if (element !== index) {
+        //         console.log(element + "-" + index);
+        //         $(`#crb_${index}`).removeClass('greenbackground');
+        //     }
+        // });
     }
 
 }
 
 function selectFreeApp() {
-    $('#paidappbutton').removeClass('greenbackground');
-    $('#freeappbutton').addClass('greenbackground');
-    this.selectedcost = 'free';
+    if (this.selectedcost === 'free') {
+        $('#freeappbutton').removeClass('greenbackground');
+        this.selectedcost = '';
+    } else {
+        $('#paidappbutton').removeClass('greenbackground');
+        $('#freeappbutton').addClass('greenbackground');
+        this.selectedcost = 'free';
+    }
 }
 
 function selectPaidApp() {
-    $('#paidappbutton').addClass('greenbackground');
-    $('#freeappbutton').removeClass('greenbackground');
-    this.selectedcost = 'paid';
+    if (this.selectedcost === 'paid') {
+        $('#paidappbutton').removeClass('greenbackground');
+        this.selectedcost = '';
+    } else {
+        $('#paidappbutton').addClass('greenbackground');
+        $('#freeappbutton').removeClass('greenbackground');
+        this.selectedcost = 'paid';
+    }
 }
 
 function selectGenre(genre, buttonid) {
-    console.log(`selection = ${genre} with buttonid ${buttonid}`);
-    $(selectedgenrebuttonid).removeClass('greenbackground');
-    $(buttonid).addClass('greenbackground');
-    selectedgenre = genre;
-    selectedgenrebuttonid = buttonid;
+    if (this.selectedgenre === genre) {
+        $(buttonid).removeClass('greenbackground');
+        selectedgenre = '';
+    } else {
+        console.log(`selection = ${genre} with buttonid ${buttonid}`);
+        $(selectedgenrebuttonid).removeClass('greenbackground');
+        $(buttonid).addClass('greenbackground');
+        selectedgenre = genre;
+        selectedgenrebuttonid = buttonid;
+    }
 }
 
 function addGenreButton(genre, rownum = 1, colnum = 1) {
