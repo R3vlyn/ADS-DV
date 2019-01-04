@@ -1,12 +1,13 @@
 var playstoreapps;
 var selectedgenre = '';
 var selectedgenrebuttonid;
+var myData = null;
 var includedattributes = [];
 var currentstep = 1;
 var completes = document.querySelectorAll(".complete");
 var route = "";
 var selectedcontentrating = '';
-var cost = '';
+var selectedcost = '';
 var maxinstalls = 1000000;
 var mininstalls = 0;
 var contentratings = ['Everyone', 'Teen', 'Everyone 10+', 'Mature 17+',
@@ -17,6 +18,8 @@ var android_versions = ['4.0.3', '4.2', '4.4', '2.3', '3.0', '4.1', '4.0', '2.3.
     '5.0', '6.0', '1.6', '1.5', '2.1', '7.0', '5.1', '4.3', '2.0',
     '3.2', '7.1', '8.0', '3.1', '2.0.1', '1.0', 'none'
 ]
+
+var costoptions = ['Free', 'Paid']
 
 var select = document.getElementById("selectAndroidVersion");
 this.android_versions = this.android_versions.sort();
@@ -85,32 +88,68 @@ class Knowns {
         this.wannaknow = [];
         this.known = [];
         if (genre === '') {
-            this.wannaknow.push("genre");
+            this.wannaknow.push("Category");
         } else {
             this.genre = genre;
-            this.known.push("genre");
+            this.known.push("Category");
         }
         if (version === 'none') {
-            this.wannaknow.push("version");
+            this.wannaknow.push("Android Ver");
         } else {
             this.version = version;
-            this.known.push("version");
+            this.known.push("Android Ver");
         }
         if (cost === '') {
-            this.wannaknow.push("cost");
+            this.wannaknow.push("Type");
         } else {
             this.cost = cost;
-            this.known.push("cost");
+            this.known.push("Type");
         }
         if (contentrating === '') {
-            this.wannaknow.push("contentrating");
+            this.wannaknow.push("Content Rating");
         } else {
             this.contentrating = contentrating;
-            this.known.push("contentrating");
+            this.known.push("Content Rating");
         }
     }
+}
 
+class Advice {
+    addGenre(genre) {
+        this.genre = genre
+    }
+    addContentrating(contentrating) {
+        this.contentrating = contentrating;
+    }
+    addType(type) {
+        this.type = type;
+    }
+    addVersion(version) {
+        this.version = version;
+    }
+    constructor() {
+        this.genre = null;
+        this.contentrating = null;
+        this.type = null;
+        this.version = null;
+    }
 
+    getText() {
+        var advice = 'Based on the given criteria';
+        if (this.genre !== null) {
+            advice += ", the best genre is " + this.genre;
+        }
+        if (this.contentrating !== null) {
+            advice += ", the best Content Rating is " + this.contentrating;
+        }
+        if (this.type !== null) {
+            advice += ", the best Type is " + this.type;
+        }
+        if (this.version !== null) {
+            advice += ", the best Android version to use is " + this.version;
+        }
+        return advice;
+    }
 }
 
 
@@ -124,13 +163,115 @@ $(document).ready(function() {
 
 function submitKnowns() {
     var selectedversion = $("#selectAndroidVersion option:selected").text();
-    this.knowns = new Knowns(this.selectedgenre, selectedversion, this.cost, this.selectedcontentrating)
+    this.knowns = new Knowns(this.selectedgenre, selectedversion, this.selectedcost, this.selectedcontentrating)
     nextStep();
-    calculateCharts(this.knowns);
+    calculateCharts(this.knowns, this.goals);
 }
 
-function calculateCharts(knowns, goals); {
+function calculateCharts(knowns, goals) {
+    var newdata = [];
+    this.myData.forEach(element => {
+        if (element.installs_new < goals.maxinstalls && element.installs_new > goals.mininstalls && element.Reviews > goals.minreviews && element.Rating > goals.minrating) {
+            add = true;
+            knowns.known.forEach(k => {
+                attributename = '';
+                switch (k) {
+                    case "Category":
+                        attributename = 'genre';
+                        break;
+                    case "Content Rating":
+                        attributename = 'contentrating';
+                        break;
+                    case "Type":
+                        attributename = 'cost';
+                        break;
+                    case "Android Ver":
+                        attributename = 'version';
+                        break;
+                    default:
+                        break;
+                }
+                if (element[k] !== knowns[attributename]) {
+                    console.log(`${element[k]} is not ${knowns[attributename]}`)
+                    add = false;
+                }
+            })
+            if (add) {
+                console.log('add')
+                newdata.push(element)
+            };
+        }
+    });
+    var charts = [];
+    console.log(newdata);
+    this.advice = new Advice();
+    knowns.wannaknow.forEach(wannaknow => {
+        this.addFinalChart(newdata, wannaknow);
+    })
+    $('#advice').text(this.advice.getText());
+}
 
+function addFinalChart(data, name) {
+    var strippedname = name.replace(' ', '');
+    $("#charts").append(`<canvas id="${strippedname}-chart" width="800" height="450"></canvas>`)
+
+    var AvgRating = d3.nest()
+        .key(function(d) { return d[name]; })
+        .rollup(function(v) { return d3.mean(v, function(d) { return d.Rating; }); })
+        .entries(data);
+
+    console.log(AvgRating);
+
+    var swapped = swap(AvgRating);
+
+    const ordered = {};
+
+    Object.keys(swapped).sort(function(a, b) { return b - a; }).forEach(function(key) {
+        ordered[key] = swapped[key];
+    });
+
+
+
+    values = Array.from(Object.keys(ordered));
+    labels = Array.from(Object.values(ordered));
+
+    attributename = '';
+    switch (name) {
+        case "Category":
+            attributename = 'genre';
+            break;
+        case "Content Rating":
+            attributename = 'contentrating';
+            break;
+        case "Type":
+            attributename = 'type';
+            break;
+        case "Android Ver":
+            attributename = 'version';
+            break;
+        default:
+            break;
+    }
+    this.advice[attributename] = labels[0];
+
+    new Chart(document.getElementById(`${strippedname}-chart`), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Average rating",
+                backgroundColor: "#3e95cd",
+                data: values
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: `Average rating per ${name}`
+            }
+        }
+    });
 }
 
 function SelectNewApp() {
@@ -185,36 +326,13 @@ function restart() {
 }
 
 
-var svg = d3.select("svg"),
-    margin = {
-        top: 20,
-        right: 20,
-        bottom: 30,
-        left: 50
-    },
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var x = d3.scaleBand()
-    .rangeRound([0, width])
-    .padding(0.1);
-
-var y = d3.scaleLinear()
-    .rangeRound([height, 0]);
-
-var q = d3.queue();
-
-var myData = null;
-
 d3.csv("playstoredata.csv", function(d) {
     return d;
 }).then(function(data) {
-    myData = data;
+    this.myData = data;
     console.log(myData);
     setInstallsValues(data);
-
-    makeChart(myData);
+    setGenres(myData);
     makeChartJS(myData);
 });
 
@@ -242,9 +360,7 @@ function setInstallsValues(data) {
     document.getElementById("mininstallsrange").max = 9;
     document.getElementById("mininstallsrange").min = 1;
     document.getElementById("mininstallsrange").step = 1;
-    document.getElementById("mininstallsrange").max = 9;
-    document.getElementById("mininstallsrange").min = 1;
-    document.getElementById("mininstallsrange").step = 1;
+
 
     $(document).ready(function() {
         $('#ratingrange').change(function() {
@@ -334,8 +450,7 @@ function makeChartJS(data) {
     });
 }
 
-function makeChart(data) {
-    console.log("Chart creation initiated");
+function setGenres(data) {
     var lookup = {};
     var result = [];
 
@@ -348,54 +463,10 @@ function makeChart(data) {
     });
 
     result.sort()
+    this.genres = result;
     result.forEach(element => {
         addGenreButton(element);
     })
-
-    var unique = data.filter((v, i, a) => a.indexOf(v) === i);
-    console.log(result);
-    var categoriesAvgRating = d3.nest()
-        .key(function(d) { return d.Category; })
-        .rollup(function(v) { return d3.mean(v, function(d) { return d.Rating; }); })
-        .entries(data);
-
-    console.log(categoriesAvgRating);
-
-    x.domain(categoriesAvgRating.map(function(d) {
-        return d.key;
-    }));
-    y.domain([0, d3.max(categoriesAvgRating, function(d) {
-        return Number(d.value);
-    })]);
-
-    g.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
-
-    g.append("g")
-        .call(d3.axisLeft(y))
-        .append("text")
-        .attr("fill", "#000")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", "0.71em")
-        .attr("text-anchor", "end")
-        .text("Rating");
-
-    g.selectAll(".bar")
-        .data(categoriesAvgRating)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("x", function(d) {
-            return x(d.key);
-        })
-        .attr("y", function(d) {
-            return y(Number(d.value));
-        })
-        .attr("width", x.bandwidth())
-        .attr("height", function(d) {
-            return height - y(Number(d.value));
-        });
 }
 
 function selectContentRating(index) {
@@ -408,35 +479,30 @@ function selectContentRating(index) {
         $(`#crb_${x}`).removeClass('greenbackground');
         // var numberarray = [0, 1, 2, 3, 4, 5]
         this.selectedcontentrating = contentratings[index];
-        // numberarray.forEach(function(element) {
-        //     if (element !== index) {
-        //         console.log(element + "-" + index);
-        //         $(`#crb_${index}`).removeClass('greenbackground');
-        //     }
-        // });
+
     }
 
 }
 
 function selectFreeApp() {
-    if (this.selectedcost === 'free') {
+    if (this.selectedcost === 'Free') {
         $('#freeappbutton').removeClass('greenbackground');
         this.selectedcost = '';
     } else {
         $('#paidappbutton').removeClass('greenbackground');
         $('#freeappbutton').addClass('greenbackground');
-        this.selectedcost = 'free';
+        this.selectedcost = 'Free';
     }
 }
 
 function selectPaidApp() {
-    if (this.selectedcost === 'paid') {
+    if (this.selectedcost === 'Paid') {
         $('#paidappbutton').removeClass('greenbackground');
         this.selectedcost = '';
     } else {
         $('#paidappbutton').addClass('greenbackground');
         $('#freeappbutton').removeClass('greenbackground');
-        this.selectedcost = 'paid';
+        this.selectedcost = 'Paid';
     }
 }
 

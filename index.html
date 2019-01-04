@@ -74,12 +74,14 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <div class="container">
+                            <div class='row'>
+                                <h3>Without any clear filtering, the following graph would show which category is most successful according to the rating</h3>
+                                <canvas id="bar-chart" width="800" height="300"></canvas>
+                                <h3>But, all apps are different, so let's find out what are the best choices for you!</h3>
+                            </div>
                             <div class="row">
                                 <div class="col-sm">
-                                    <button type="button" onclick="SelectNewApp()" class="btn btn-primary main-choice-button btn-block"><h3>I want a new app</h3> </button>
-                                </div>
-                                <div class="col-sm">
-                                    <button type="button" onclick="SelectChangeApp()" class="btn btn-primary main-choice-button btn-block"><h3>What should i change in my app?</h3></button>
+                                    <button type="button" onclick="SelectNewApp()" class="btn btn-primary main-choice-button btn-block"><h3>Go find out!</h3> </button>
                                 </div>
                             </div>
 
@@ -179,6 +181,8 @@
 
                     </div>
                     <div class="carousel-item">
+                        <h2>Advice</h2>
+                        <p id="advice"></p>
                         <div id="charts">
 
                         </div>
@@ -200,12 +204,6 @@
                 <button id="row-1-col-1" type="button" class="btn btn-primary redbutton col-sm-4 " onclick="excludeAttr('reviews')">Exclude</button>
             </div> -->
         </div>
-
-        <canvas id="bar-chart" width="800" height="450"></canvas>
-        <svg width="1200" height="500"></svg>
-        <div id="pieChart"></div>
-        <div id="barChart"></div>
-        <div id="lineChart"></div>
         <script src="http://d3js.org/d3.v5.min.js"></script>
         <script src="https://d3js.org/d3-queue.v3.min.js"></script>
         <script src="index.js"></script>
